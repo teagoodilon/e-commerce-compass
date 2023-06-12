@@ -1,4 +1,4 @@
-package costumer;
+package tables.costumer;
 
 public class Costumer {
     private int id;

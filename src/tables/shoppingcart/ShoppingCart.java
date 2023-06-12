@@ -1,16 +1,14 @@
-package order;
+package tables.shoppingcart;
 
-import costumer.Costumer;
-import product.Product;
+import tables.costumer.Costumer;
+import tables.product.Product;
 
 import java.util.List;
 
-public class Order {
+public class ShoppingCart {
     private int id;
     private Costumer costumer;
     private List<Product> products;
-
-    private boolean confirmed;
 
     public int getId() {
         return id;
@@ -34,13 +32,5 @@ public class Order {
 
     public void setProducts(List<Product> products) {
         this.products = products;
-    }
-
-    public boolean isConfirmed() {
-        return confirmed;
-    }
-
-    public void setConfirmed(boolean confirmed) {
-        this.confirmed = confirmed;
     }
 }

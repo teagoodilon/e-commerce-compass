@@ -1,4 +1,4 @@
-package product;
+package tables.product;
 
 public class Product {
     private int id;
