@@ -1,7 +1,8 @@
-package tables.product;
+package tables.costumer;
 
 import database.DbConnection;
 import tables.Dao;
+import tables.product.Product;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,15 +11,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ProductDao implements Dao {
+public class CostumerDao implements Dao {
     @Override
     public void insert(Object obj) throws SQLException {
-        Product p = (Product) obj;
-        String query = "INSERT INTO PRODUCT (name, price, quantity) values (?, ?, ?)";
+        Costumer c = (Costumer) obj;
+        String query = "INSERT INTO COSTUMER (name, email) values (?, ?)";
         try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
-            conn.setString(1, p.getName());
-            conn.setDouble(2, p.getPrice());
-            conn.setInt(3, p.getQuantity());
+            conn.setString(1, c.getName());
+            conn.setString(2, c.getEmail());
             conn.execute();
         }catch (SQLException e){
             throw new SQLException(e.getMessage());
@@ -27,12 +27,11 @@ public class ProductDao implements Dao {
 
     @Override
     public boolean update(Object obj, Integer i) throws SQLException {
-        Product p = (Product) obj;
-        String query = "UPDATE PRODUCT SET name=?, price=?, quantity=? where id=" + i;
+        Costumer c = (Costumer) obj;
+        String query = "UPDATE COSTUMER SET name=?, email=? where id=" + i;
         try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
-            conn.setString(1, p.getName());
-            conn.setDouble(2, p.getPrice());
-            conn.setInt(3, p.getQuantity());
+            conn.setString(1, c.getName());
+            conn.setString(2, c.getEmail());
             conn.execute();
         }catch (SQLException e){
             throw new SQLException(e.getMessage());
@@ -42,7 +41,7 @@ public class ProductDao implements Dao {
 
     @Override
     public boolean delete(Integer i) throws SQLException {
-        String query = "DELETE FROM PRODUCT WHERE id=" + i;
+        String query = "DELETE FROM COSTUMER WHERE id=" + i;
         try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
             conn.execute();
         }catch (SQLException e){
@@ -53,34 +52,32 @@ public class ProductDao implements Dao {
 
     @Override
     public Object select(Integer i) throws SQLException {
-        Product p = new Product();
-        String query = "SELECT * FROM PRODUCT WHERE id=" + i;
+        Costumer c = new Costumer();
+        String query = "SELECT * FROM COSTUMER WHERE id=" + i;
         try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
             ResultSet rs = conn.executeQuery();
             while(rs.next()){
-                p.setName(rs.getString("name"));
-                p.setPrice(rs.getDouble("price"));
-                p.setQuantity(rs.getInt("quantity"));
+                c.setName(rs.getString("name"));
+                c.setEmail(rs.getString("email"));
             }
         }catch (SQLException e){
             throw new SQLException(e.getMessage());
         }
-        return p;
+        return c;
     }
 
     @Override
     public List<Object> select() throws SQLException {
-        List<Object> list = new ArrayList<>(Collections.singletonList(new ArrayList<Product>()));
-        String query = "SELECT * FROM PRODUCT";
+        List<Object> list = new ArrayList<>(Collections.singletonList(new ArrayList<Costumer>()));
+        String query = "SELECT * FROM COSTUMER";
         try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
             ResultSet rs = conn.executeQuery();
             while(rs.next()){
-                Product p = new Product();
-                p.setId(rs.getInt("id"));
-                p.setName(rs.getString("name"));
-                p.setPrice(rs.getDouble("price"));
-                p.setQuantity(rs.getInt("quantity"));
-                list.add(p);
+                Costumer c = new Costumer();
+                c.setId(rs.getInt("id"));
+                c.setName(rs.getString("name"));
+                c.setEmail(rs.getString("email"));
+                list.add(c);
             }
         }catch (SQLException e){
             throw new SQLException(e.getMessage());
