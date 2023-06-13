@@ -1,20 +1,23 @@
 package main;
 
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
 public class DbConnection {
-    public void connect() {
-        String url = "jdbc:postgresql://localhost:5432/db-e-commerce";
+    static String url ="jdbc:postgresql://localhost:5432/db-e-commerce" ;
+    static String user = "postgres";
+    static String password = "1984";
+    static Connection conn;
+    public static Connection getConexao() throws SQLException{
         try {
-            Properties props = new Properties();
-            props.setProperty("user", "postgres");
-            props.setProperty("password", "1984");
-            DriverManager.getConnection(url, props);
+            conn = DriverManager.getConnection(url, user, password);
             System.out.println("Conexão com o Banco de dados realizada com sucesso");
+            return conn;
+
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            throw new SQLException(e.getMessage());
         }
     }
 }

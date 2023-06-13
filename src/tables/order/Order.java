@@ -6,7 +6,7 @@ import tables.product.Product;
 import java.util.List;
 
 public class Order {
-    private int id;
+    private Integer id;
     private Costumer costumer;
     private List<Product> products;
 

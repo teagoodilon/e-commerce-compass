@@ -1,7 +1,7 @@
 package tables.costumer;
 
 public class Costumer {
-    private int id;
+    private Integer id;
     private String name;
     private String email;
 

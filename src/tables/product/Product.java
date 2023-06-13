@@ -1,7 +1,7 @@
 package tables.product;
 
 public class Product {
-    private int id;
+    private Integer id;
     private String name;
     private double price;
     private int quantity;
