@@ -9,7 +9,6 @@ public class Order {
     private Integer id;
     private Costumer costumer;
     private List<Product> products;
-
     private boolean confirmed;
 
     public int getId() {
