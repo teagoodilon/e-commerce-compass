@@ -12,7 +12,6 @@ public class DbConnection {
     public static Connection getConexao() throws SQLException{
         try {
             conn = DriverManager.getConnection(url, user, password);
-            System.out.println("Conexão com o Banco de dados realizada com sucesso");
             return conn;
 
         } catch (SQLException e) {

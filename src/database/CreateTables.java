@@ -27,7 +27,7 @@ public class CreateTables {
             " FOREIGN KEY (COSTUMER) REFERENCES costumer (id), " +
             " FOREIGN KEY (PRODUCTS) REFERENCES product (id)) ";
 
-    public static void main(String[] args) throws SQLException {
+    public static void main() throws SQLException {
         CreateTables createTable = new CreateTables();
         createTable.createTable();
     }
