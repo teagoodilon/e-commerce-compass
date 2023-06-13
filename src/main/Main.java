@@ -10,11 +10,6 @@ import java.sql.SQLException;
 public class Main {
 
     public static void main(String[] args) throws SQLException {
-        //CreateTables.main();
-        //Product p1 = new Product();
-        //p1.setName("Arroz");
-        // p1.setPrice(15.99);
-        //p1.setQuantity(10);
 
         Costumer p1 = new Costumer();
         p1.setName("Teago Odilon");
