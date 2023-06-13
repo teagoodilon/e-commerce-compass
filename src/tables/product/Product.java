@@ -3,8 +3,8 @@ package tables.product;
 public class Product {
     private Integer id;
     private String name;
-    private double price;
-    private int quantity;
+    private Double price;
+    private Integer quantity;
 
     public int getId() {
         return id;
