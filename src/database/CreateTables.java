@@ -3,7 +3,6 @@ package database;
 import java.sql.*;
 
 public class CreateTables {
-
     private static final String PRODUCTTABLE = "CREATE TABLE product " +
             "(ID SERIAL PRIMARY KEY ," +
             " NAME VARCHAR(50), " +
@@ -15,19 +14,18 @@ public class CreateTables {
             " EMAIL VARCHAR(50))";
     private static final String ORDERTABLE = "CREATE TABLE orders " +
             "(ID SERIAL," +
-            " COSTUMER INTEGER, " +
-            " PRODUCTS INTEGER, " +
+            " SHOPPINGCART INTEGER, " +
             " CONFIRMED BOOLEAN, " +
-            " FOREIGN KEY (COSTUMER) REFERENCES costumer (id), " +
-            " FOREIGN KEY (PRODUCTS) REFERENCES product (id)) ";
+            " FOREIGN KEY (SHOPPINGCART) REFERENCES shoppingCart (id))";
     private static final String SHOPPINGCARTTABLE = "CREATE TABLE shoppingCart " +
-            "(ID SERIAL," +
+            "(ID SERIAL PRIMARY KEY," +
+            " NUMSHOPPINGCART INTEGER," +
             " COSTUMER INTEGER, " +
             " PRODUCTS INTEGER, " +
             " FOREIGN KEY (COSTUMER) REFERENCES costumer (id), " +
-            " FOREIGN KEY (PRODUCTS) REFERENCES product (id)) ";
+            " FOREIGN KEY (PRODUCTS) REFERENCES product (id))";
 
-    public static void main() throws SQLException {
+    public static void main(String[] args) throws SQLException {
         CreateTables createTable = new CreateTables();
         createTable.createTable();
     }
@@ -40,8 +38,8 @@ public class CreateTables {
                 if(!resultSet.next()){
                     statement.execute(PRODUCTTABLE);
                     statement.execute(COSTUMERTABLE);
-                    statement.execute(ORDERTABLE);
                     statement.execute(SHOPPINGCARTTABLE);
+                    statement.execute(ORDERTABLE);
                     System.out.println("Tabelas criadas com sucesso!");
                 } else {
                     System.out.println("Todas as tabelas já foram criadas!");

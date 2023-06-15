@@ -9,10 +9,9 @@ public class ShoppingCart {
     private Integer id;
     private Costumer costumer;
     private List<Product> products;
+    private Integer numShoppingCart;
 
-    public int getId() {
-        return id;
-    }
+    public int getId() { return id; }
 
     public void setId(int id) {
         this.id = id;
@@ -33,4 +32,8 @@ public class ShoppingCart {
     public void setProducts(List<Product> products) {
         this.products = products;
     }
+
+    public Integer getNumShoppingCart() { return numShoppingCart; }
+
+    public void setNumShoppingCart(Integer numShoppingCart) { this.numShoppingCart = numShoppingCart; }
 }

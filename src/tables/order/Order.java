@@ -1,15 +1,11 @@
 package tables.order;
 
-import tables.costumer.Costumer;
-import tables.product.Product;
-
-import java.util.List;
 
 public class Order {
     private Integer id;
-    private Costumer costumer;
-    private List<Product> products;
+    private Integer numShoppingCart;
     private Boolean confirmed;
+
 
     public int getId() {
         return id;
@@ -19,21 +15,9 @@ public class Order {
         this.id = id;
     }
 
-    public Costumer getCostumer() {
-        return costumer;
-    }
+    public Integer getNumShoppingCart() { return numShoppingCart; }
 
-    public void setCostumer(Costumer costumer) {
-        this.costumer = costumer;
-    }
-
-    public List<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<Product> products) {
-        this.products = products;
-    }
+    public void setNumShoppingCart(Integer numShoppingCart) { this.numShoppingCart = numShoppingCart; }
 
     public boolean isConfirmed() {
         return confirmed;

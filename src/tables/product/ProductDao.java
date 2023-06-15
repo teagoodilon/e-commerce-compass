@@ -7,7 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ProductDao implements Dao {
@@ -58,6 +57,7 @@ public class ProductDao implements Dao {
         try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
             ResultSet rs = conn.executeQuery();
             while(rs.next()){
+                p.setId(rs.getInt("id"));
                 p.setName(rs.getString("name"));
                 p.setPrice(rs.getDouble("price"));
                 p.setQuantity(rs.getInt("quantity"));
@@ -70,7 +70,7 @@ public class ProductDao implements Dao {
 
     @Override
     public List<Object> select() throws SQLException {
-        List<Object> list = new ArrayList<>(Collections.singletonList(new ArrayList<Product>()));
+        List<Object> list = new ArrayList<>();
         String query = "SELECT * FROM PRODUCT";
         try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
             ResultSet rs = conn.executeQuery();

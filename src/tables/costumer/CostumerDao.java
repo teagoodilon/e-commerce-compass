@@ -2,7 +2,6 @@ package tables.costumer;
 
 import database.DbConnection;
 import tables.Dao;
-import tables.product.Product;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -57,6 +56,7 @@ public class CostumerDao implements Dao {
         try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
             ResultSet rs = conn.executeQuery();
             while(rs.next()){
+                c.setId(rs.getInt("id"));
                 c.setName(rs.getString("name"));
                 c.setEmail(rs.getString("email"));
             }
