@@ -1,9 +1,11 @@
 package tables.order;
 
 
+import tables.shoppingcart.ShoppingCart;
+
 public class Order {
     private Integer id;
-    private Integer numShoppingCart;
+    private ShoppingCart shoppingCartId;
     private Boolean confirmed;
 
 
@@ -15,9 +17,13 @@ public class Order {
         this.id = id;
     }
 
-    public Integer getNumShoppingCart() { return numShoppingCart; }
+    public ShoppingCart getShoppingCartId() {
+        return shoppingCartId;
+    }
 
-    public void setNumShoppingCart(Integer numShoppingCart) { this.numShoppingCart = numShoppingCart; }
+    public void setShoppingCartId(ShoppingCart shoppingCartId) {
+        this.shoppingCartId = shoppingCartId;
+    }
 
     public boolean isConfirmed() {
         return confirmed;

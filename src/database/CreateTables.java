@@ -12,20 +12,25 @@ public class CreateTables {
             "(ID SERIAL PRIMARY KEY ," +
             " NAME VARCHAR(50), " +
             " EMAIL VARCHAR(50))";
-    private static final String ORDERTABLE = "CREATE TABLE orders " +
-            "(ID SERIAL," +
-            " SHOPPINGCART INTEGER, " +
-            " CONFIRMED BOOLEAN, " +
-            " FOREIGN KEY (SHOPPINGCART) REFERENCES shoppingCart (id))";
     private static final String SHOPPINGCARTTABLE = "CREATE TABLE shoppingCart " +
             "(ID SERIAL PRIMARY KEY," +
-            " NUMSHOPPINGCART INTEGER," +
-            " COSTUMER INTEGER, " +
-            " PRODUCTS INTEGER, " +
-            " FOREIGN KEY (COSTUMER) REFERENCES costumer (id), " +
-            " FOREIGN KEY (PRODUCTS) REFERENCES product (id))";
+            " COSTUMER_ID INTEGER, " +
+            " FOREIGN KEY (COSTUMER_ID) REFERENCES costumer (id))";
 
-    public static void main(String[] args) throws SQLException {
+    private static final String CARTPRODUCTTABLE = "CREATE TABLE cartproduct " +
+            "(SHOPPINGCART_ID INTEGER," +
+            " PRODUCT_ID INTEGER, " +
+            " QNTPRODUCT INTEGER, " +
+            " FOREIGN KEY (SHOPPINGCART_ID) REFERENCES shoppingcart (id), " +
+            " FOREIGN KEY (PRODUCT_ID) REFERENCES product (id))";
+
+    private static final String ORDERTABLE = "CREATE TABLE orders " +
+            "(ID SERIAL," +
+            " SHOPPINGCART_ID INTEGER, " +
+            " CONFIRMED BOOLEAN, " +
+            " FOREIGN KEY (SHOPPINGCART_ID) REFERENCES shoppingCart (id))";
+
+    public static void main() throws SQLException {
         CreateTables createTable = new CreateTables();
         createTable.createTable();
     }
@@ -39,6 +44,7 @@ public class CreateTables {
                     statement.execute(PRODUCTTABLE);
                     statement.execute(COSTUMERTABLE);
                     statement.execute(SHOPPINGCARTTABLE);
+                    statement.execute(CARTPRODUCTTABLE);
                     statement.execute(ORDERTABLE);
                     System.out.println("Tabelas criadas com sucesso!");
                 } else {
