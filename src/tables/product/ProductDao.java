@@ -56,16 +56,23 @@ public class ProductDao implements Dao {
         String query = "SELECT * FROM PRODUCT WHERE id=" + i;
         try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
             ResultSet rs = conn.executeQuery();
-            while(rs.next()){
+            if(rs.next()){
                 p.setId(rs.getInt("id"));
                 p.setName(rs.getString("name"));
                 p.setPrice(rs.getDouble("price"));
                 p.setQuantity(rs.getInt("quantity"));
+            } else {
+                System.out.println("Não existe Produto com esse id");
+                return null;
             }
-        }catch (SQLException e){
-            throw new SQLException(e.getMessage());
+        } catch (SQLException e){
+            System.out.println("Não existe Produto com esse id");
         }
-        return p;
+        if(p.getId() == i){
+            return p;
+        } else {
+            return null;
+        }
     }
 
     @Override

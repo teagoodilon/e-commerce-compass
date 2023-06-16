@@ -1,18 +1,11 @@
 package menu;
 
 import database.CreateTables;
-import tables.cart_product.CartProduct;
-import tables.costumer.CostumerDao;
 import tables.costumer.CostumerMenu;
-import tables.order.OrderDao;
 import tables.order.OrderMenu;
-import tables.product.ProductDao;
 import tables.product.ProductMenu;
-import tables.shoppingcart.ShoppingCartDao;
 import tables.shoppingcart.ShoppingCartMenu;
-
 import java.sql.SQLException;
-import java.sql.SQLOutput;
 import java.util.Scanner;
 
 public class Menu {
@@ -36,7 +29,7 @@ public class Menu {
         System.out.println("5. Sair");
     }
 
-    public void executeOption(int option) {
+    public void executeOption(int option) throws SQLException{
         switch (option) {
             case 1:
                 productMenu.executeProductMenu();

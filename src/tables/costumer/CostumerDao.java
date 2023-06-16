@@ -55,15 +55,22 @@ public class CostumerDao implements Dao {
         String query = "SELECT * FROM COSTUMER WHERE id=" + i;
         try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
             ResultSet rs = conn.executeQuery();
-            while(rs.next()){
+            if(rs.next()) {
                 c.setId(rs.getInt("id"));
                 c.setName(rs.getString("name"));
                 c.setEmail(rs.getString("email"));
+            }else {
+                System.out.println("Não existe cliente com esse id");
+                return null;
             }
         }catch (SQLException e){
-            throw new SQLException(e.getMessage());
+            System.out.println("Não existe Produto com esse id");
         }
-        return c;
+        if(c.getId() == i){
+            return c;
+        } else {
+            return null;
+        }
     }
 
     @Override
