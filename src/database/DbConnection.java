@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DbConnection {
-    static String url ="jdbc:postgresql://localhost:5432/db-e-commerce" ;
+    static String url ="jdbc:postgresql://localhost:5432/odilons-e-commerce" ;
     static String user = "postgres";
     static String password = "1984";
     static Connection conn;

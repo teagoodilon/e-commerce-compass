@@ -8,7 +8,6 @@ public class Order {
     private ShoppingCart shoppingCartId;
     private Boolean confirmed;
 
-
     public int getId() {
         return id;
     }

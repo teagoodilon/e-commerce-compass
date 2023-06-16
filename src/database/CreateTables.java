@@ -30,12 +30,12 @@ public class CreateTables {
             " CONFIRMED BOOLEAN, " +
             " FOREIGN KEY (SHOPPINGCART_ID) REFERENCES shoppingCart (id))";
 
-    public static void main() throws SQLException {
+    public static Boolean start() throws SQLException {
         CreateTables createTable = new CreateTables();
-        createTable.createTable();
+        return createTable.createDb();
     }
 
-    private void createTable() throws SQLException {
+    private Boolean createDb() throws SQLException {
         try (Connection connection = DbConnection.getConexao();
              Statement statement = connection.createStatement();) {
                 DatabaseMetaData metaData = connection.getMetaData();
@@ -46,9 +46,9 @@ public class CreateTables {
                     statement.execute(SHOPPINGCARTTABLE);
                     statement.execute(CARTPRODUCTTABLE);
                     statement.execute(ORDERTABLE);
-                    System.out.println("Tabelas criadas com sucesso!");
+                    return false;
                 } else {
-                    System.out.println("Todas as tabelas já foram criadas!");
+                    return true;
                 }
         } catch (SQLException e) {
             throw new SQLException(e.getMessage());
