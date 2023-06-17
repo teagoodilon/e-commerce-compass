@@ -50,7 +50,7 @@ public class ShoppingCartMenu {
             scanner.nextLine();
             executeShoppingCart(option);
             System.out.println();
-        } while (option != 5);
+        } while (option != 6);
     }
     public void stockProducts() throws SQLException {
         System.out.println("Lista de produtos disponíveis: ");
@@ -64,11 +64,21 @@ public class ShoppingCartMenu {
             System.out.println();
         }
     }
+    public float sumAllValue() throws SQLException {
+        float allValue = 0;
+        for (Object obj : cartProductDao.select()) {
+            if (obj instanceof CartProduct cp) {
+                allValue += cp.getProductsValue();
+            }
+        }
+        return allValue;
+    }
     private void executeShoppingCart(int option) throws SQLException {
         int id;
         int idProduct;
         int qntProduct=0;
         int optionProduct = 0;
+        int count = 0;
         Scanner scan = new Scanner(System.in);
         CartProduct cartProduct = new CartProduct();
         ShoppingCart shoppingCart = new ShoppingCart();
@@ -85,7 +95,7 @@ public class ShoppingCartMenu {
                         System.out.println("Cliente: " + cover.getName());
                         stockProducts();
                         do {
-                            System.out.print("Digite o id do que produto você quer adicionar: ");
+                            System.out.print("Digite o id do produto que você quer adicionar: ");
                             idProduct = scan.nextInt();
                             scan.nextLine();
                             Product coverProduct = (Product) productDao.select(idProduct);
@@ -105,6 +115,8 @@ public class ShoppingCartMenu {
                                 cartProduct.setProductId(list);
                                 cartProduct.setQntProduct(qntList);
                                 cartProduct.setProductsValue((float) (qntProduct*coverProduct.getPrice()));
+                                shoppingCart.changeTotalValue(cartProduct.getProductsValue());
+                                shoppingCartDao.update(shoppingCart, cartProduct.getShoppingCartId().getId());
                                 cartProductDao.insert(cartProduct);
                                 if(productDao.selectAvaible().isEmpty()){
                                     System.out.println("Nosso estoque de produtos está vazio");
@@ -129,7 +141,7 @@ public class ShoppingCartMenu {
             case 3:
                 System.out.print("Digite o id do cliente que você deseja editar o carrinho: ");
                 id = scan.nextInt();
-                int count = 0;
+                count = 0;
                 int qntProductSc = 0;
                 List<int[]> tuple = new ArrayList<>();
                 if(costumerDao.select(id) != null) {
@@ -151,70 +163,72 @@ public class ShoppingCartMenu {
                             scan.nextLine();
                             Product haveProductQnt = (Product) productDao.select(idProduct);
                             if(haveProductQnt != null) {
-                                if (haveProductQnt.getQuantity() > 0) {
-                                    Product coverProduct = null;
-                                    for (Product p : cartProduct.getProductId()) {
-                                        if (p.getId() == idProduct) {
-                                            coverProduct = new Product();
-                                            coverProduct.setId(p.getId());
-                                            coverProduct.setName(p.getName());
-                                            coverProduct.setPrice(p.getPrice());
-                                        }
+                                Product coverProduct = null;
+                                for (Product p : cartProduct.getProductId()) {
+                                    if (p.getId() == idProduct) {
+                                        coverProduct = new Product();
+                                        coverProduct.setId(p.getId());
+                                        coverProduct.setName(p.getName());
+                                        coverProduct.setPrice(p.getPrice());
                                     }
-                                    for (int[] i : tuple) {
-                                        assert coverProduct != null;
-                                        if (coverProduct.getId() == i[0]) {
-                                            qntProductSc = i[1];
-                                        }
+                                }
+                                for (int[] i : tuple) {
+                                    assert coverProduct != null;
+                                    if (coverProduct.getId() == i[0]) {
+                                        qntProductSc = i[1];
                                     }
-                                    if (coverProduct != null) {
-                                        System.out.print("Digite a nova quantidade desse produto: ");
-                                        qntProduct = scan.nextInt();
-                                        Product newProduct = (Product) productDao.select(coverProduct.getId());
-                                        if (newProduct.getQuantity() != 0) {
-                                            if (qntProduct < qntProductSc && qntProduct != 0) {
-                                                coverProduct.setQuantity(newProduct.getQuantity() + (qntProductSc - qntProduct));
-                                                productDao.update(coverProduct, coverProduct.getId());
+                                }
+                                if (coverProduct != null) {
+                                    System.out.print("Digite a nova quantidade desse produto: ");
+                                    qntProduct = scan.nextInt();
+                                    Product newProduct = (Product) productDao.select(coverProduct.getId());
+                                    if (newProduct.getQuantity() != 0) {
+                                        if (qntProduct < qntProductSc && qntProduct != 0) {
+                                            coverProduct.setQuantity(newProduct.getQuantity() + (qntProductSc - qntProduct));
+                                            productDao.update(coverProduct, coverProduct.getId());
+                                            list.add(coverProduct);
+                                            qntList.add(qntProduct);
+                                            cartProduct.setShoppingCartId((ShoppingCart) shoppingCartDao.select(id));
+                                            cartProduct.setProductId(list);
+                                            cartProduct.setQntProduct(qntList);
+                                            cartProduct.setProductsValue((float) (qntProduct * coverProduct.getPrice()));
+                                            cartProductDao.update(cartProduct, coverProduct.getId());
+                                            shoppingCart.setTotalValue(sumAllValue());
+                                            shoppingCartDao.update(shoppingCart, cartProduct.getShoppingCartId().getId());
+                                            System.out.println("Produto editado com sucesso");
+                                        } else {
+                                            while (newProduct.getQuantity() - qntProduct < 0) {
+                                                System.out.println("Não temos essa quantidade do produto em estoque, tente novamente.");
+                                                System.out.println("Temos apenas: " + newProduct.getQuantity() + " unidades");
+                                                System.out.print("Digite quantas unidades desse produto você deseja: ");
+                                                qntProduct = scan.nextInt();
+                                            }
+                                            coverProduct.setQuantity((newProduct.getQuantity() + qntProductSc) - qntProduct);
+                                            productDao.update(coverProduct, coverProduct.getId());
+                                            cartProduct.setShoppingCartId((ShoppingCart) shoppingCartDao.select(id));
+                                            if (qntProduct == 0) {
+                                                System.out.println("Produto removido do carrinho");
+                                                cartProductDao.delete(coverProduct.getId());
+                                                shoppingCart.setTotalValue(sumAllValue());
+                                                shoppingCartDao.update(shoppingCart, cartProduct.getShoppingCartId().getId());
+                                            } else {
                                                 list.add(coverProduct);
                                                 qntList.add(qntProduct);
-                                                cartProduct.setShoppingCartId((ShoppingCart) shoppingCartDao.select(id));
                                                 cartProduct.setProductId(list);
                                                 cartProduct.setQntProduct(qntList);
                                                 cartProduct.setProductsValue((float) (qntProduct * coverProduct.getPrice()));
                                                 cartProductDao.update(cartProduct, coverProduct.getId());
+                                                shoppingCart.setTotalValue(sumAllValue());
+                                                shoppingCartDao.update(shoppingCart, cartProduct.getShoppingCartId().getId());
                                                 System.out.println("Produto editado com sucesso");
-                                            } else {
-                                                while (newProduct.getQuantity() - qntProduct < 0) {
-                                                    System.out.println("Não temos essa quantidade do produto em estoque, tente novamente.");
-                                                    System.out.println("Temos apenas: " + newProduct.getQuantity() + " unidades");
-                                                    System.out.print("Digite quantas unidades desse produto você deseja adicionar: ");
-                                                    qntProduct = scan.nextInt();
-                                                }
-                                                coverProduct.setQuantity((newProduct.getQuantity() + qntProductSc) - qntProduct);
-                                                productDao.update(coverProduct, coverProduct.getId());
-                                                if (qntProduct == 0) {
-                                                    System.out.println("Produto removido do carrinho");
-                                                    cartProductDao.delete(((ShoppingCart) shoppingCartDao.select(id)).getId());
-                                                } else {
-                                                    list.add(coverProduct);
-                                                    qntList.add(qntProduct);
-                                                    cartProduct.setShoppingCartId((ShoppingCart) shoppingCartDao.select(id));
-                                                    cartProduct.setProductId(list);
-                                                    cartProduct.setQntProduct(qntList);
-                                                    cartProduct.setProductsValue((float) (qntProduct * coverProduct.getPrice()));
-                                                    cartProductDao.update(cartProduct, coverProduct.getId());
-                                                    System.out.println("Produto editado com sucesso");
-                                                }
                                             }
-                                        } else {
-                                            System.out.println("Não temos mais esse produto em estoque");
                                         }
                                     } else {
-                                        System.out.println("Não existe produto com esse id no carrinho");
-                                        System.out.println("Voltando ao menu de Carrinhos..");
+                                        System.out.println("Não temos mais esse produto em estoque");
                                     }
                                 } else {
-                                    System.out.println("Não temos esse produto em estoque");
+                                    System.out.println("Não existe produto com esse id no carrinho");
+                                    System.out.println("Voltando ao menu de Carrinhos..");
                                 }
                             }
                         } else {
@@ -228,8 +242,31 @@ public class ShoppingCartMenu {
                 }
                 break;
             case 4:
+                System.out.print("Digite o id do cliente que você deseja listar o carrinho: ");
+                id = scan.nextInt();
+                count = 0;
+                shoppingCart = (ShoppingCart) shoppingCartDao.select(id);
+                if(shoppingCart != null){
+                    System.out.print("Carrinho do cliente: " + shoppingCart.getCostumerId().getName());
+                    System.out.println(" - Id: " + shoppingCart.getCostumerId().getId());
+                    System.out.println("Lista de produtos: ");
+                    cartProduct = (CartProduct) cartProductDao.select(shoppingCart.getId());
+                    if (cartProduct != null){
+                        for (Product p : cartProduct.getProductId()) {
+                            System.out.print("Id = " + p.getId() + " - ");
+                            System.out.print("Nome = " + p.getName() + " - ");
+                            System.out.println("Quantidade = " + cartProduct.getQntProduct().get(count));
+                            count++;
+                        }
+                        System.out.print("Valor total do carrinho: R$");
+                        System.out.print(shoppingCart.getTotalValue());
+                    }
+                } else{
+                    System.out.println("O carrinho desse cliente não foi criado");
+                }
                 break;
             case 5:
+
                 break;
             case 6:
                 break;

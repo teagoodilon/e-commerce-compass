@@ -58,7 +58,7 @@ public class CartProductDao implements Dao {
 
     @Override
     public Boolean delete(Integer i) throws SQLException {
-        String query = "DELETE FROM CARTPRODUCT WHERE shoppingcart_id=" + i;
+        String query = "DELETE FROM CARTPRODUCT WHERE product_id=" + i;
         try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
             conn.execute();
         }catch (SQLException e){
@@ -84,7 +84,8 @@ public class CartProductDao implements Dao {
             cp.setQntProduct(qntList);
             cp.setProductId(list);
         }catch (SQLException e){
-            throw new SQLException(e.getMessage());
+            System.out.println("Não há nenhum produto nesse carinho");
+            return null;
         }
         return cp;
     }

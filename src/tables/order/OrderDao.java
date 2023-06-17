@@ -2,9 +2,6 @@ package tables.order;
 
 import database.DbConnection;
 import tables.Dao;
-import tables.costumer.Costumer;
-import tables.costumer.CostumerDao;
-import tables.product.Product;
 import tables.shoppingcart.ShoppingCart;
 import tables.shoppingcart.ShoppingCartDao;
 

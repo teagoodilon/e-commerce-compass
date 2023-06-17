@@ -15,9 +15,10 @@ public class ShoppingCartDao implements Dao {
     @Override
     public Boolean insert(Object obj) throws SQLException {
         ShoppingCart sc = (ShoppingCart) obj;
-        String query = "INSERT INTO SHOPPINGCART (costumer_id) values (?)";
+        String query = "INSERT INTO SHOPPINGCART (costumer_id, totalvalue) values (?, ?)";
         try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
             conn.setInt(1, sc.getCostumerId().getId());
+            conn.setFloat(2, sc.getTotalValue());
             conn.execute();
             return true;
         }catch (SQLException e){
@@ -29,9 +30,10 @@ public class ShoppingCartDao implements Dao {
     @Override
     public Boolean update(Object obj, Integer i) throws SQLException {
         ShoppingCart sc = (ShoppingCart) obj;
-        String query = "UPDATE SHOPPINGCART SET costumer_id=? where id=" + i;
+        String query = "UPDATE SHOPPINGCART SET costumer_id=?, totalvalue=? where id=" + i;
         try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
             conn.setInt(1, sc.getCostumerId().getId());
+            conn.setFloat(2, sc.getTotalValue());
             conn.execute();
         }catch (SQLException e){
             throw new SQLException(e.getMessage());
@@ -60,6 +62,7 @@ public class ShoppingCartDao implements Dao {
                 sc = new ShoppingCart();
                 sc.setId(rs.getInt("id"));
                 sc.setCostumerId((Costumer) cd.select(rs.getInt("costumer_id")));
+                sc.setTotalValue(rs.getFloat("totalvalue"));
             }
         } catch (SQLException e){
             System.out.println("Não existe carrinho associado a esse cliente");
@@ -78,6 +81,7 @@ public class ShoppingCartDao implements Dao {
                 ShoppingCart sc = new ShoppingCart();
                 sc.setId(rs.getInt("id"));
                 sc.setCostumerId((Costumer) cd.select(rs.getInt("costumer_id")));
+                sc.setTotalValue(rs.getFloat("totalvalue"));
                 list.add(sc);
             }
         }catch (SQLException e){

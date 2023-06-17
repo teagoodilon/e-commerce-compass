@@ -15,6 +15,7 @@ public class CreateTables {
     private static final String SHOPPINGCARTTABLE = "CREATE TABLE shoppingCart " +
             "(ID SERIAL PRIMARY KEY," +
             " COSTUMER_ID INTEGER UNIQUE, " +
+            " TOTALVALUE FLOAT," +
             " FOREIGN KEY (COSTUMER_ID) REFERENCES costumer (id))";
 
     private static final String CARTPRODUCTTABLE = "CREATE TABLE cartproduct " +
@@ -24,7 +25,6 @@ public class CreateTables {
             " PRODUCTSVALUE FLOAT, " +
             " FOREIGN KEY (SHOPPINGCART_ID) REFERENCES shoppingcart (id), " +
             " FOREIGN KEY (PRODUCT_ID) REFERENCES product (id))";
-
     private static final String ORDERTABLE = "CREATE TABLE orders " +
             "(ID SERIAL," +
             " SHOPPINGCART_ID INTEGER, " +
