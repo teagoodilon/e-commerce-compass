@@ -12,20 +12,21 @@ import java.util.List;
 
 public class CostumerDao implements Dao {
     @Override
-    public void insert(Object obj) throws SQLException {
+    public Boolean insert(Object obj) throws SQLException {
         Costumer c = (Costumer) obj;
         String query = "INSERT INTO COSTUMER (name, email) values (?, ?)";
         try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
             conn.setString(1, c.getName());
             conn.setString(2, c.getEmail());
             conn.execute();
+            return true;
         }catch (SQLException e){
             throw new SQLException(e.getMessage());
         }
     }
 
     @Override
-    public boolean update(Object obj, Integer i) throws SQLException {
+    public Boolean update(Object obj, Integer i) throws SQLException {
         Costumer c = (Costumer) obj;
         String query = "UPDATE COSTUMER SET name=?, email=? where id=" + i;
         try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
@@ -39,7 +40,7 @@ public class CostumerDao implements Dao {
     }
 
     @Override
-    public boolean delete(Integer i) throws SQLException {
+    public Boolean delete(Integer i) throws SQLException {
         String query = "DELETE FROM COSTUMER WHERE id=" + i;
         try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
             conn.execute();
@@ -64,7 +65,7 @@ public class CostumerDao implements Dao {
                 return null;
             }
         }catch (SQLException e){
-            System.out.println("Não existe Produto com esse id");
+            System.out.println("Não existe cliente com esse id");
         }
         if(c.getId() == i){
             return c;

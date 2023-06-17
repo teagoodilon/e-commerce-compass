@@ -11,13 +11,26 @@ public class ProductMenu {
         productDao = new ProductDao();
     }
 
+    public void stockProducts() throws SQLException {
+        System.out.println("Lista de produtos disponíveis: ");
+        for (Object obj : productDao.selectAvaible()) {
+            if (obj instanceof Product p) {
+                System.out.print("Id = " + p.getId() + " - ");
+                System.out.print("Nome = " + p.getName() + " - ");
+                System.out.print("Preço = R$" + p.getPrice() + " - ");
+                System.out.print("Quantidade = " + p.getQuantity());
+            }
+            System.out.println();
+        }
+    }
+
     public void showProductMenu() {
         System.out.println("\n\n\n===== Menu de Produtos =====");
         System.out.println("O que você deseja fazer com o Produto:");
         System.out.println("1. Criar");
         System.out.println("2. Editar");
         System.out.println("3. Listar um produto");
-        System.out.println("4. Listar todos produtos");
+        System.out.println("4. Listar todos produtos disponíveis");
         System.out.println("5. Voltar ao menu principal");
     }
 
@@ -85,12 +98,13 @@ public class ProductMenu {
                 }
                 break;
             case 4:
-                for (Object obj : productDao.select()){
-                    if(obj instanceof Product p){
-                        System.out.println("Id = " + p.getId());
-                        System.out.println("Nome = " + p.getName());
-                        System.out.println("Preço = " + p.getPrice());
-                        System.out.println("Quantidade = " + p.getQuantity());
+                System.out.println("Lista de produtos disponíveis: ");
+                for (Object obj : productDao.selectAvaible()) {
+                    if (obj instanceof Product p) {
+                        System.out.print("Id = " + p.getId() + " - ");
+                        System.out.print("Nome = " + p.getName() + " - ");
+                        System.out.print("Preço = R$" + p.getPrice() + " - ");
+                        System.out.print("Quantidade = " + p.getQuantity());
                     }
                     System.out.println();
                 }

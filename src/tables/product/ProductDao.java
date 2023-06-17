@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ProductDao implements Dao {
     @Override
-    public void insert(Object obj) throws SQLException {
+    public Boolean insert(Object obj) throws SQLException {
         Product p = (Product) obj;
         String query = "INSERT INTO PRODUCT (name, price, quantity) values (?, ?, ?)";
         try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
@@ -19,13 +19,14 @@ public class ProductDao implements Dao {
             conn.setDouble(2, p.getPrice());
             conn.setInt(3, p.getQuantity());
             conn.execute();
+            return true;
         }catch (SQLException e){
             throw new SQLException(e.getMessage());
         }
     }
 
     @Override
-    public boolean update(Object obj, Integer i) throws SQLException {
+    public Boolean update(Object obj, Integer i) throws SQLException {
         Product p = (Product) obj;
         String query = "UPDATE PRODUCT SET name=?, price=?, quantity=? where id=" + i;
         try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
@@ -40,7 +41,7 @@ public class ProductDao implements Dao {
     }
 
     @Override
-    public boolean delete(Integer i) throws SQLException {
+    public Boolean delete(Integer i) throws SQLException {
         String query = "DELETE FROM PRODUCT WHERE id=" + i;
         try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
             conn.execute();
@@ -62,11 +63,11 @@ public class ProductDao implements Dao {
                 p.setPrice(rs.getDouble("price"));
                 p.setQuantity(rs.getInt("quantity"));
             } else {
-                System.out.println("Não existe Produto com esse id");
+                System.out.println("Não existe produto com esse id");
                 return null;
             }
         } catch (SQLException e){
-            System.out.println("Não existe Produto com esse id");
+            System.out.println("Não existe produto com esse id");
         }
         if(p.getId() == i){
             return p;
@@ -94,4 +95,23 @@ public class ProductDao implements Dao {
         }
         return list;
     }
+    public List<Product> selectAvaible() throws SQLException {
+        List<Product> list = new ArrayList<>();
+        String query = "SELECT * FROM PRODUCT WHERE QUANTITY > 0";
+        try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
+            ResultSet rs = conn.executeQuery();
+            while(rs.next()){
+                Product p = new Product();
+                p.setId(rs.getInt("id"));
+                p.setName(rs.getString("name"));
+                p.setPrice(rs.getDouble("price"));
+                p.setQuantity(rs.getInt("quantity"));
+                list.add(p);
+            }
+        }catch (SQLException e){
+            throw new SQLException(e.getMessage());
+        }
+        return list;
+    }
+
 }

@@ -17,19 +17,20 @@ import java.util.List;
 public class OrderDao implements Dao {
     private final ShoppingCartDao sc = new ShoppingCartDao();
     @Override
-    public void insert(Object obj) throws SQLException {
+    public Boolean insert(Object obj) throws SQLException {
         Order o = (Order ) obj;
         String query = "INSERT INTO ORDERS (shoppingcart_id, confirmed) values (?, ?)";
         try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
             conn.setInt(1, o.getShoppingCartId().getId());
             conn.setBoolean(2, o.isConfirmed());
             conn.execute();
+            return true;
         }catch (SQLException e){
             throw new SQLException(e.getMessage());
         }
     }
     @Override
-    public boolean update(Object obj, Integer i) throws SQLException {
+    public Boolean update(Object obj, Integer i) throws SQLException {
         Order o = (Order ) obj;
         String query = "UPDATE ORDERS SET shoppingcart_id=?, confirmed=? where id=" + i;
         try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
@@ -43,7 +44,7 @@ public class OrderDao implements Dao {
     }
 
     @Override
-    public boolean delete(Integer i) throws SQLException {
+    public Boolean delete(Integer i) throws SQLException {
         String query = "DELETE FROM ORDERS WHERE id=" + i;
         try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
             conn.execute();

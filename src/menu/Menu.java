@@ -52,7 +52,6 @@ public class Menu {
                 break;
         }
     }
-
     public void execute() throws SQLException {
         int option;
         System.out.println("Bem-Vindo ao Odilon's E-commerce! \n");

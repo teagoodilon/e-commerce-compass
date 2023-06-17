@@ -14,13 +14,14 @@ public class CreateTables {
             " EMAIL VARCHAR(50))";
     private static final String SHOPPINGCARTTABLE = "CREATE TABLE shoppingCart " +
             "(ID SERIAL PRIMARY KEY," +
-            " COSTUMER_ID INTEGER, " +
+            " COSTUMER_ID INTEGER UNIQUE, " +
             " FOREIGN KEY (COSTUMER_ID) REFERENCES costumer (id))";
 
     private static final String CARTPRODUCTTABLE = "CREATE TABLE cartproduct " +
             "(SHOPPINGCART_ID INTEGER," +
             " PRODUCT_ID INTEGER, " +
             " QNTPRODUCT INTEGER, " +
+            " PRODUCTSVALUE FLOAT, " +
             " FOREIGN KEY (SHOPPINGCART_ID) REFERENCES shoppingcart (id), " +
             " FOREIGN KEY (PRODUCT_ID) REFERENCES product (id))";
 

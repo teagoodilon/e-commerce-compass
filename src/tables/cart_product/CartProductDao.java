@@ -18,28 +18,37 @@ public class CartProductDao implements Dao {
     private final ShoppingCartDao sc = new ShoppingCartDao();
     private final ProductDao pd = new ProductDao();
     @Override
-    public void insert(Object obj) throws SQLException {
+    public Boolean insert(Object obj) throws SQLException {
         CartProduct cp = (CartProduct) obj;
-        String query = "INSERT INTO CARTPRODUCT (qntProduct, shoppingCart_id, product_id) values (?, ?, ?)";
+        List<Integer> qntProduct = cp.getQntProduct();
+        List<Product> products = cp.getProductId();
+        String query = "INSERT INTO CARTPRODUCT (productsValue, shoppingCart_id, qntProduct, product_id) values (?, ?, ?, ?)";
         try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
-            conn.setInt(1, cp.getQntProduct());
+            conn.setFloat(1, cp.getProductsValue());
             conn.setInt(2, cp.getShoppingCartId().getId());
-            for(Product p : cp.getProductId()){
-                conn.setInt(3, p.getId());
+            for (int i = 0; i < products.size(); i++) {
+                conn.setInt(3, qntProduct.get(i));
+                conn.setInt(4, products.get(i).getId());
                 conn.addBatch();
             }
             conn.executeBatch();
+            qntProduct.clear();
+            products.clear();
+            return true;
         }catch (SQLException e){
             throw new SQLException(e.getMessage());
         }
     }
 
     @Override
-    public boolean update(Object obj, Integer i) throws SQLException {
+    public Boolean update(Object obj, Integer i) throws SQLException {
         CartProduct cp = (CartProduct) obj;
-        String query = "UPDATE CARTPRODUCT SET qntProduct=? where product_id=" + i;
+        String query = "UPDATE CARTPRODUCT SET qntProduct=?, productsValue=? where product_id=" + i;
         try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
-            conn.setInt(1, cp.getQntProduct());
+            for(Integer integer : cp.getQntProduct()){
+                conn.setInt(1, integer);
+            }
+            conn.setFloat(2, cp.getProductsValue());
             conn.execute();
         }catch (SQLException e){
             throw new SQLException(e.getMessage());
@@ -48,7 +57,7 @@ public class CartProductDao implements Dao {
     }
 
     @Override
-    public boolean delete(Integer i) throws SQLException {
+    public Boolean delete(Integer i) throws SQLException {
         String query = "DELETE FROM CARTPRODUCT WHERE shoppingcart_id=" + i;
         try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
             conn.execute();
@@ -62,14 +71,17 @@ public class CartProductDao implements Dao {
     public Object select(Integer i) throws SQLException {
         CartProduct cp = new CartProduct();
         List<Product> list = new ArrayList<>();
+        List<Integer> qntList = new ArrayList<>();
         String query = "SELECT * FROM CARTPRODUCT WHERE shoppingcart_id=" + i;
         try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
             ResultSet rs = conn.executeQuery();
             while(rs.next()){
                 cp.setShoppingCartId((ShoppingCart) sc.select(rs.getInt("shoppingcart_id")));
-                cp.setQntProduct(rs.getInt("qntProduct"));
+                qntList.add(rs.getInt("qntProduct"));
+                cp.setProductsValue(rs.getFloat("productsValue"));
                 list.add((Product) pd.select(rs.getInt("product_id")));
             }
+            cp.setQntProduct(qntList);
             cp.setProductId(list);
         }catch (SQLException e){
             throw new SQLException(e.getMessage());
@@ -80,6 +92,7 @@ public class CartProductDao implements Dao {
     @Override
     public List<Object> select() throws SQLException {
         List<Object> listAll = new ArrayList<>();
+        List<Integer> qntList = new ArrayList<>();
         CartProduct cp = null;
         String query = "SELECT * FROM CARTPRODUCT";
         try(Statement conn = DbConnection.getConexao().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
@@ -88,11 +101,14 @@ public class CartProductDao implements Dao {
                 cp = new CartProduct();
                 List<Product> list = new ArrayList<>();
                 cp.setShoppingCartId((ShoppingCart) sc.select(rs.getInt("shoppingcart_id")));
-                cp.setQntProduct(rs.getInt("qntProduct"));
+                cp.setProductsValue(rs.getFloat("productsValue"));
+                qntList.add(rs.getInt("qntProduct"));
                 list.add((Product) pd.select(rs.getInt("product_id")));
                 while (rs.next() && rs.getInt("shoppingcart_id") == cp.getShoppingCartId().getId()){
                     list.add((Product) pd.select(rs.getInt("product_id")));
+                    qntList.add(rs.getInt("qntProduct"));
                 }
+                cp.setQntProduct(qntList);
                 cp.setProductId(list);
                 listAll.add(cp);
                 rs.previous();

@@ -1,7 +1,6 @@
 package main;
 import menu.Menu;
 
-import java.io.IOException;
 import java.sql.SQLException;
 
 public class Main {

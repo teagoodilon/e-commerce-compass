@@ -7,8 +7,10 @@ import java.util.List;
 
 public class CartProduct {
     private List<Product> productId;
-    private Integer qntProduct;
+    private List<Integer> qntProduct;
     private ShoppingCart shoppingCartId;
+
+    private Float productsValue;
 
     public List<Product> getProductId() {
         return productId;
@@ -18,11 +20,11 @@ public class CartProduct {
         this.productId = productId;
     }
 
-    public Integer getQntProduct() {
+    public List<Integer> getQntProduct() {
         return qntProduct;
     }
 
-    public void setQntProduct(Integer qntProduct) {
+    public void setQntProduct(List<Integer> qntProduct) {
         this.qntProduct = qntProduct;
     }
 
@@ -32,5 +34,13 @@ public class CartProduct {
 
     public void setShoppingCartId(ShoppingCart shoppingCartId) {
         this.shoppingCartId = shoppingCartId;
+    }
+
+    public Float getProductsValue() {
+        return productsValue;
+    }
+
+    public void setProductsValue(Float productsValue) {
+        this.productsValue = productsValue;
     }
 }
