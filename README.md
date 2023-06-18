@@ -17,17 +17,11 @@ git clone https://github.com/teagoodilon/e-commerce-compass.git
 ```
 2. Open the program PgAdmin and click in **Tools**.
 3. After that, click in **Import/Export Servers...**.
-4. Now select `"database.json"` in:
-```
-e-commerce-compass/src/database/database.json
-```
+4. Now select `"database.json"` in: `e-commerce-compass/src/database/database.json`
 5. Then click in **Next**.
 6. Check the **Checkbox**. (🤣)
 7. And press **Next** two times.
-8. Click **Ok**.
+8. Click **Finish** and **Ok**.
 9. Back to the clone files.
-10. Access the package:
-```
-e-commerce-compass/src/main/Main.java
-```
+10. Access the package: `e-commerce-compass/src/main/Main.java`
 11. And run the project on Intellij IDE! ✅
