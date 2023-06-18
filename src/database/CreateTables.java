@@ -31,14 +31,14 @@ public class CreateTables {
             " CONFIRMED BOOLEAN, " +
             " FOREIGN KEY (SHOPPINGCART_ID) REFERENCES shoppingCart (id))";
 
-    public static Boolean start() throws SQLException {
+    public static Boolean start(String p) throws SQLException {
         CreateTables createTable = new CreateTables();
-        return createTable.createDb();
+        return createTable.createDb(p);
     }
 
-    private Boolean createDb() throws SQLException {
-        try (Connection connection = DbConnection.getConexao();
-             Statement statement = connection.createStatement();) {
+    private Boolean createDb(String p) throws SQLException {
+        try (Connection connection = DbConnection.makeConection(p);
+             Statement statement = connection.createStatement()) {
                 DatabaseMetaData metaData = connection.getMetaData();
                 ResultSet resultSet = metaData.getTables(null, null, "product", null);
                 if(!resultSet.next()){

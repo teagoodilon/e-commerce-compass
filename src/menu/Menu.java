@@ -54,8 +54,12 @@ public class Menu {
     }
     public void execute() throws SQLException {
         int option;
-        System.out.println("Bem-Vindo ao Odilon's E-commerce! \n");
-        CreateTables.start();
+        String password;
+        System.out.println("Bem-Vindo ao Odilon's E-commerce!");
+        System.out.print("Digite a senha que você definiu no PgAdmin: ");
+        password = String.valueOf(scanner.nextInt());
+        System.out.println();
+        CreateTables.start(password);
         do {
             showMenu();
             System.out.print("Escolha uma opção: ");
