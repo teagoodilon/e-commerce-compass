@@ -1,4 +1,4 @@
-package tables.cart_product;
+package tables.cartproduct;
 
 import tables.product.Product;
 import tables.shoppingcart.ShoppingCart;

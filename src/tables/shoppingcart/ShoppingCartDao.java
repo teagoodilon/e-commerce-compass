@@ -11,6 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ShoppingCartDao implements Dao {
+
+    static final String TOTVALSTRING = "totalvalue";
+    static final String CSSTRING = "costumer_id";
+
     private final CostumerDao cd = new CostumerDao();
     @Override
     public Boolean insert(Object obj) throws SQLException {
@@ -61,8 +65,8 @@ public class ShoppingCartDao implements Dao {
             while(rs.next()){
                 sc = new ShoppingCart();
                 sc.setId(rs.getInt("id"));
-                sc.setCostumerId((Costumer) cd.select(rs.getInt("costumer_id")));
-                sc.setTotalValue(rs.getFloat("totalvalue"));
+                sc.setCostumerId((Costumer) cd.select(rs.getInt(CSSTRING)));
+                sc.setTotalValue(rs.getFloat(TOTVALSTRING));
             }
         } catch (SQLException e){
             System.out.println("Não existe carrinho associado a esse cliente");
@@ -78,8 +82,8 @@ public class ShoppingCartDao implements Dao {
             while(rs.next()){
                 sc = new ShoppingCart();
                 sc.setId(rs.getInt("id"));
-                sc.setCostumerId((Costumer) cd.select(rs.getInt("costumer_id")));
-                sc.setTotalValue(rs.getFloat("totalvalue"));
+                sc.setCostumerId((Costumer) cd.select(rs.getInt(CSSTRING)));
+                sc.setTotalValue(rs.getFloat(TOTVALSTRING));
             }
         } catch (SQLException e){
             System.out.println("Não existe carrinho associado a esse cliente");
@@ -97,8 +101,8 @@ public class ShoppingCartDao implements Dao {
             while(rs.next()){
                 ShoppingCart sc = new ShoppingCart();
                 sc.setId(rs.getInt("id"));
-                sc.setCostumerId((Costumer) cd.select(rs.getInt("costumer_id")));
-                sc.setTotalValue(rs.getFloat("totalvalue"));
+                sc.setCostumerId((Costumer) cd.select(rs.getInt(CSSTRING)));
+                sc.setTotalValue(rs.getFloat(TOTVALSTRING));
                 list.add(sc);
             }
         }catch (SQLException e){

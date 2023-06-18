@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDao implements Dao {
+
+    static final String PCSTRING = "price";
+    static final String QNSTRING = "quantity";
     @Override
     public Boolean insert(Object obj) throws SQLException {
         Product p = (Product) obj;
@@ -60,8 +63,8 @@ public class ProductDao implements Dao {
             if(rs.next()){
                 p.setId(rs.getInt("id"));
                 p.setName(rs.getString("name"));
-                p.setPrice(rs.getDouble("price"));
-                p.setQuantity(rs.getInt("quantity"));
+                p.setPrice(rs.getDouble(PCSTRING));
+                p.setQuantity(rs.getInt(QNSTRING));
             } else {
                 System.out.println("Não existe produto com esse id");
                 return null;
@@ -86,8 +89,8 @@ public class ProductDao implements Dao {
                 Product p = new Product();
                 p.setId(rs.getInt("id"));
                 p.setName(rs.getString("name"));
-                p.setPrice(rs.getDouble("price"));
-                p.setQuantity(rs.getInt("quantity"));
+                p.setPrice(rs.getDouble(PCSTRING));
+                p.setQuantity(rs.getInt(QNSTRING));
                 list.add(p);
             }
         }catch (SQLException e){
@@ -104,8 +107,8 @@ public class ProductDao implements Dao {
                 Product p = new Product();
                 p.setId(rs.getInt("id"));
                 p.setName(rs.getString("name"));
-                p.setPrice(rs.getDouble("price"));
-                p.setQuantity(rs.getInt("quantity"));
+                p.setPrice(rs.getDouble(PCSTRING));
+                p.setQuantity(rs.getInt(QNSTRING));
                 list.add(p);
             }
         }catch (SQLException e){

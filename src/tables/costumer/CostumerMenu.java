@@ -7,8 +7,8 @@ import java.util.Scanner;
 
 public class CostumerMenu {
     private Scanner scanner;
-    private CostumerDao costumerDao;
-    private ShoppingCartDao shoppingCartDao;
+    private final CostumerDao costumerDao;
+    private final ShoppingCartDao shoppingCartDao;
 
     public CostumerMenu() {
         scanner = new Scanner(System.in);
@@ -70,7 +70,7 @@ public class CostumerMenu {
                     } catch (SQLException e){
                         throw new SQLException(e.getMessage());
                     }
-                    System.out.println("Produto editado com sucesso!");
+                    System.out.println("Cliente editado com sucesso!");
                 }
                 break;
             case 3:

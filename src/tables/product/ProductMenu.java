@@ -1,34 +1,62 @@
 package tables.product;
 
-import tables.cart_product.CartProductDao;
-
+import tables.cartproduct.CartProduct;
+import tables.cartproduct.CartProductDao;
+import tables.order.Order;
+import tables.order.OrderDao;
 import java.sql.SQLException;
 import java.util.Scanner;
 
 public class ProductMenu {
-    private Scanner scanner;
-    private ProductDao productDao;
+    private final Scanner scanner;
+    private final ProductDao productDao;
 
-    private CartProductDao cartProductDao;
+    private final CartProductDao cartProductDao;
+    private final OrderDao orderDao;
+    static final String IDSTRING = "Id = ";
+    static final String NAMESTRING = "Nome = ";
+    static final String QUANTITY = "Nome = ";
     public ProductMenu() {
         scanner = new Scanner(System.in);
         productDao = new ProductDao();
         cartProductDao = new CartProductDao();
+        orderDao = new OrderDao();
     }
 
     public void stockProducts() throws SQLException {
         System.out.println("Lista de produtos disponíveis: ");
         for (Object obj : productDao.selectAvaible()) {
             if (obj instanceof Product p) {
-                System.out.print("Id = " + p.getId() + " - ");
-                System.out.print("Nome = " + p.getName() + " - ");
+                System.out.print(IDSTRING + p.getId() + " - ");
+                System.out.print(NAMESTRING + p.getName() + " - ");
                 System.out.print("Preço = R$" + p.getPrice() + " - ");
-                System.out.print("Quantidade = " + p.getQuantity());
+                System.out.print(QUANTITY + p.getQuantity());
             }
             System.out.println();
         }
     }
+    public void sellProducts() throws SQLException {
+        CartProduct cartProduct;
+        Order order;
+        int count = 0;
+        System.out.println("Lista de produtos vendidos: ");
+        for (Object obj : orderDao.select()) {
+            if (obj instanceof Order o) {
+                cartProduct = (CartProduct) cartProductDao.select(o.getShoppingCartId().getId());
+                order = (Order) orderDao.select(o.getShoppingCartId().getId());
+                if(order.isConfirmed()) {
+                    for (Product p : cartProduct.getProductId()) {
+                        System.out.print(IDSTRING + p.getId() + " - ");
+                        System.out.print(NAMESTRING + p.getName() + " - ");
+                        System.out.print(QUANTITY + cartProduct.getQntProduct().get(count) + "\n");
+                        count++;
+                    }
+                    count = 0;
+                }
+            }
 
+        }
+    }
     public void showProductMenu() {
         System.out.println("\n\n\n===== Menu de Produtos =====");
         System.out.println("O que você deseja fazer com o Produto:");
@@ -37,7 +65,8 @@ public class ProductMenu {
         System.out.println("3. Apagar produto");
         System.out.println("4. Listar um produto");
         System.out.println("5. Listar todos produtos disponíveis");
-        System.out.println("6. Voltar ao menu principal");
+        System.out.println("6. Listar todos produtos vendidos");
+        System.out.println("7. Voltar ao menu principal");
     }
 
     public void executeProductMenu() throws SQLException {
@@ -49,7 +78,7 @@ public class ProductMenu {
             scanner.nextLine();
             executeProduct(option);
             System.out.println();
-        } while (option != 6);
+        } while (option != 7);
     }
 
     private void executeProduct(int option) throws SQLException {
@@ -111,25 +140,19 @@ public class ProductMenu {
                 id = scan.nextInt();
                 Product cover1 = (Product) productDao.select(id);
                 if(cover1 != null){
-                    System.out.println("Id = " + cover1.getId());
-                    System.out.println("Nome = " + cover1.getName());
+                    System.out.println(IDSTRING + cover1.getId());
+                    System.out.println(NAMESTRING + cover1.getName());
                     System.out.println("Preço = " + cover1.getPrice());
-                    System.out.println("Quantidade = " + cover1.getQuantity());
+                    System.out.println(QUANTITY + cover1.getQuantity());
                 }
                 break;
             case 5:
-                System.out.println("Lista de produtos disponíveis: ");
-                for (Object obj : productDao.selectAvaible()) {
-                    if (obj instanceof Product p) {
-                        System.out.print("Id = " + p.getId() + " - ");
-                        System.out.print("Nome = " + p.getName() + " - ");
-                        System.out.print("Preço = R$" + p.getPrice() + " - ");
-                        System.out.print("Quantidade = " + p.getQuantity());
-                    }
-                    System.out.println();
-                }
+                stockProducts();
                 break;
             case 6:
+                sellProducts();
+                break;
+            case 7:
                 break;
             default:
                 System.out.println("Opção inválida, tente novamente");

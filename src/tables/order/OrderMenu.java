@@ -1,7 +1,7 @@
 package tables.order;
 
-import tables.cart_product.CartProduct;
-import tables.cart_product.CartProductDao;
+import tables.cartproduct.CartProduct;
+import tables.cartproduct.CartProductDao;
 import tables.costumer.Costumer;
 import tables.costumer.CostumerDao;
 import tables.product.Product;
@@ -12,12 +12,12 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class OrderMenu {
-    private Scanner scanner;
+    private final Scanner scanner;
     private final CostumerDao costumerDao;
     private final ShoppingCartDao shoppingCartDao;
     private final OrderDao orderDao;
     private final CartProductDao cartProductDao;
-
+    static final String NOTCART = "O carrinho desse cliente não foi criado ainda";
     public OrderMenu() {
         scanner = new Scanner(System.in);
         costumerDao = new CostumerDao();
@@ -69,7 +69,7 @@ public class OrderMenu {
                           System.out.print("O pedido desse cliente já foi criado");
                       }
                     } else {
-                        System.out.print("O carrinho desse cliente não foi criado ainda");
+                        System.out.print(NOTCART);
                     }
                 }
                 break;
@@ -91,7 +91,7 @@ public class OrderMenu {
                             System.out.print("O pedido já foi confirmado!");
                         }
                     } else {
-                        System.out.print("O carrinho desse cliente não foi criado ainda");
+                        System.out.print(NOTCART);
                     }
                 }
                 break;
@@ -130,7 +130,7 @@ public class OrderMenu {
                             System.out.print("O pedido não foi criado ainda");
                         }
                     } else {
-                        System.out.print("O carrinho desse cliente não foi criado ainda");
+                        System.out.print(NOTCART);
                     }
                 }
                 break;

@@ -1,13 +1,11 @@
 package tables.shoppingcart;
 
-import tables.cart_product.CartProduct;
-import tables.cart_product.CartProductDao;
+import tables.cartproduct.CartProduct;
+import tables.cartproduct.CartProductDao;
 import tables.costumer.Costumer;
 import tables.costumer.CostumerDao;
 import tables.product.Product;
 import tables.product.ProductDao;
-
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +18,13 @@ public class ShoppingCartMenu {
     private final CartProductDao cartProductDao;
     private final ProductDao productDao;
     private final ShoppingCartDao shoppingCartDao;
+
+    static final String CHOSEOPSTRING = "Escolha uma opção: ";
+    static final String IDSTRING = "Id = ";
+    static final String NAMESTRING = "Nome = ";
+    static final String QNTSTRING = "Quantidade = ";
+    static final String NOTHVPSTRING = "Não temos essa quantidade do produto em estoque, tente novamente.";
+    static final String DIGITQNTPSTRING = "Digite quantas unidades desse produto você deseja adicionar: ";
 
     public ShoppingCartMenu() {
         scanner = new Scanner(System.in);
@@ -44,7 +49,7 @@ public class ShoppingCartMenu {
         int option;
         do {
             showShoppingCartMenu();
-            System.out.print("Escolha uma opção: ");
+            System.out.print(CHOSEOPSTRING);
             option = scanner.nextInt();
             scanner.nextLine();
             executeShoppingCart(option);
@@ -55,10 +60,10 @@ public class ShoppingCartMenu {
         System.out.println("Lista de produtos disponíveis: ");
         for (Object obj : productDao.selectAvaible()) {
             if (obj instanceof Product p) {
-                System.out.print("Id = " + p.getId() + " - ");
-                System.out.print("Nome = " + p.getName() + " - ");
+                System.out.print(IDSTRING + p.getId() + " - ");
+                System.out.print(NAMESTRING + p.getName() + " - ");
                 System.out.print("Preço = R$" + p.getPrice() + " - ");
-                System.out.print("Quantidade = " + p.getQuantity());
+                System.out.print(QNTSTRING + p.getQuantity());
             }
             System.out.println();
         }
@@ -75,7 +80,7 @@ public class ShoppingCartMenu {
     private void executeShoppingCart(int option) throws SQLException {
         int id;
         int idProduct;
-        int qntProduct=0;
+        int qntProduct;
         int optionProduct = 0;
         int count = 0;
         Scanner scan = new Scanner(System.in);
@@ -99,11 +104,11 @@ public class ShoppingCartMenu {
                             scan.nextLine();
                             Product coverProduct = (Product) productDao.select(idProduct);
                             if (coverProduct != null) {
-                                System.out.print("Digite quantas unidades desse produto você deseja adicionar: ");
+                                System.out.print(DIGITQNTPSTRING);
                                 qntProduct = scan.nextInt();
                                 while ((coverProduct.getQuantity() - qntProduct) < 0) {
-                                    System.out.println("Não temos essa quantidade do produto em estoque, tente novamente.");
-                                    System.out.print("Digite quantas unidades desse produto você deseja adicionar: ");
+                                    System.out.println(NOTHVPSTRING);
+                                    System.out.print(DIGITQNTPSTRING);
                                     qntProduct = scan.nextInt();
                                 }
                                 coverProduct.setQuantity(coverProduct.getQuantity() - qntProduct);
@@ -124,7 +129,7 @@ public class ShoppingCartMenu {
                                     System.out.println("Você deseja adicionar mais produtos? ");
                                     System.out.println("1. Sim ");
                                     System.out.println("2. Não ");
-                                    System.out.print("Escolha uma opção: ");
+                                    System.out.print(CHOSEOPSTRING);
                                     optionProduct = scanner.nextInt();
                                     scanner.nextLine();
                                 }
@@ -151,11 +156,11 @@ public class ShoppingCartMenu {
                             cartProduct = new CartProduct();
                             Product coverProduct = (Product) productDao.select(idProduct);
                             if (coverProduct != null) {
-                                System.out.print("Digite quantas unidades desse produto você deseja adicionar: ");
+                                System.out.print(DIGITQNTPSTRING);
                                 qntProduct = scan.nextInt();
                                 while ((coverProduct.getQuantity() - qntProduct) < 0) {
-                                    System.out.println("Não temos essa quantidade do produto em estoque, tente novamente.");
-                                    System.out.print("Digite quantas unidades desse produto você deseja adicionar: ");
+                                    System.out.println(NOTHVPSTRING);
+                                    System.out.print(DIGITQNTPSTRING);
                                     qntProduct = scan.nextInt();
                                 }
                                 coverProduct.setQuantity(coverProduct.getQuantity() - qntProduct);
@@ -176,7 +181,7 @@ public class ShoppingCartMenu {
                                     System.out.println("Você deseja adicionar mais produtos? ");
                                     System.out.println("1. Sim ");
                                     System.out.println("2. Não ");
-                                    System.out.print("Escolha uma opção: ");
+                                    System.out.print(CHOSEOPSTRING);
                                     optionProduct = scanner.nextInt();
                                     scanner.nextLine();
                                 }
@@ -201,9 +206,9 @@ public class ShoppingCartMenu {
                         cartProduct = (CartProduct) cartProductDao.select(shoppingCart.getId());
                         System.out.println("Produtos que estão neste carrinho: ");
                         for (Product p : cartProduct.getProductId()) {
-                            System.out.print("Id = " + p.getId() + " - ");
-                            System.out.print("Nome = " + p.getName() + " - ");
-                            System.out.println("Quantidade = " + cartProduct.getQntProduct().get(count));
+                            System.out.print(IDSTRING + p.getId() + " - ");
+                            System.out.print(NAMESTRING + p.getName() + " - ");
+                            System.out.println(QNTSTRING + cartProduct.getQntProduct().get(count));
                             int[] exTuple = {p.getId(), cartProduct.getQntProduct().get(count)};
                             tuple.add(exTuple);
                             count++;
@@ -249,9 +254,9 @@ public class ShoppingCartMenu {
                                             System.out.println("Produto editado com sucesso");
                                         } else {
                                             while (newProduct.getQuantity() - qntProduct < 0) {
-                                                System.out.println("Não temos essa quantidade do produto em estoque, tente novamente.");
+                                                System.out.println(NOTHVPSTRING);
                                                 System.out.println("Temos apenas: " + newProduct.getQuantity() + " unidades");
-                                                System.out.print("Digite quantas unidades desse produto você deseja: ");
+                                                System.out.print(DIGITQNTPSTRING);
                                                 qntProduct = scan.nextInt();
                                             }
                                             coverProduct.setQuantity((newProduct.getQuantity() + qntProductSc) - qntProduct);
@@ -304,9 +309,9 @@ public class ShoppingCartMenu {
                     cartProduct = (CartProduct) cartProductDao.select(shoppingCart.getId());
                     if (cartProduct != null){
                         for (Product p : cartProduct.getProductId()) {
-                            System.out.print("Id = " + p.getId() + " - ");
-                            System.out.print("Nome = " + p.getName() + " - ");
-                            System.out.println("Quantidade = " + cartProduct.getQntProduct().get(count));
+                            System.out.print(IDSTRING + p.getId() + " - ");
+                            System.out.print(NAMESTRING + p.getName() + " - ");
+                            System.out.println(QNTSTRING + cartProduct.getQntProduct().get(count));
                             count++;
                         }
                         System.out.print("Valor total do carrinho: R$");
@@ -325,9 +330,9 @@ public class ShoppingCartMenu {
                         System.out.println("Lista de produtos: ");
                         cartProduct = (CartProduct) cartProductDao.select(sc.getId());
                         for (Product p : cartProduct.getProductId()) {
-                            System.out.print("Id = " + p.getId() + " - ");
-                            System.out.print("Nome = " + p.getName() + " - ");
-                            System.out.println("Quantidade = " + cartProduct.getQntProduct().get(count));
+                            System.out.print(IDSTRING + p.getId() + " - ");
+                            System.out.print(NAMESTRING + p.getName() + " - ");
+                            System.out.println(QNTSTRING + cartProduct.getQntProduct().get(count));
                             count++;
                         }
                         count = 0;

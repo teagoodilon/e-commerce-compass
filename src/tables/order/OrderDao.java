@@ -76,7 +76,8 @@ public class OrderDao implements Dao {
             while(rs.next()){
                 Order o = new Order();
                 o.setId(rs.getInt("id"));
-                o.setShoppingCartId((ShoppingCart) sc.select(rs.getInt("shoppingcart_id")));
+                o.setConfirmed(rs.getBoolean("confirmed"));
+                o.setShoppingCartId((ShoppingCart) sc.selectSc(rs.getInt("shoppingcart_id")));
                 list.add(o);
             }
         }catch (SQLException e){
