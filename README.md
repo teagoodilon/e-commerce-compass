@@ -7,6 +7,8 @@ This is my first challenge made during the scholarship period at Compass.UOL. It
 - 📚 Jdbc - [Download | pgJDBC (postgresql.org)](https://jdbc.postgresql.org/download/)
 - 🐘 PostgreSQL - [PostgreSQL: Downloads](https://www.postgresql.org/download/)
 - 👨‍💻 PgAdmin - [Download (pgadmin.org)](https://www.pgadmin.org/download/)
+- 💻 Intellij - [Download IntelliJ IDEA – The Leading Java and Kotlin IDE (jetbrains.com)](https://www.jetbrains.com/idea/download/#section=windows)
+
 
 ## How to run the Project 
 1. Clone the project:
@@ -23,11 +25,9 @@ e-commerce-compass/src/database/database.json
 6. Check the **Checkbox**. (🤣)
 7. And press **Next** two times.
 8. Click **Ok**.
-9. And select the database created on left side **PostgreSQL 15**.
-10. Type the password: ***1984***.
-11. Back to the clone files.
-12. Access the package:
+9. Back to the clone files.
+10. Access the package:
 ```
 e-commerce-compass/src/main/Main.java
 ```
-13. And run the project! ✅
+11. And run the project on Intellij IDE! ✅
