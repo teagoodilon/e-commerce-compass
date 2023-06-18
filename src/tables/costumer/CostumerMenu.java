@@ -1,24 +1,29 @@
 package tables.costumer;
 
+import tables.shoppingcart.ShoppingCartDao;
+
 import java.sql.SQLException;
 import java.util.Scanner;
 
 public class CostumerMenu {
     private Scanner scanner;
     private CostumerDao costumerDao;
+    private ShoppingCartDao shoppingCartDao;
 
     public CostumerMenu() {
         scanner = new Scanner(System.in);
         costumerDao = new CostumerDao();
+        shoppingCartDao = new ShoppingCartDao();
     }
     public void showCostumerMenu() {
         System.out.println("\n\n\n===== Menu de Cliente =====");
         System.out.println("O que você deseja fazer com o Cliente:");
         System.out.println("1. Criar");
         System.out.println("2. Editar");
-        System.out.println("3. Listar um cliente");
-        System.out.println("4. Listar todos clientes");
-        System.out.println("5. Voltar ao menu principal");
+        System.out.println("3. Apagar um cliente");
+        System.out.println("4. Listar um cliente");
+        System.out.println("5. Listar todos clientes");
+        System.out.println("6. Voltar ao menu principal");
     }
 
     public void executeProductMenu() throws SQLException {
@@ -30,7 +35,7 @@ public class CostumerMenu {
             scanner.nextLine();
             executeCostumer(option);
             System.out.println();
-        } while (option != 5);
+        } while (option != 6);
     }
 
     private void executeCostumer(int option) throws SQLException {
@@ -69,6 +74,20 @@ public class CostumerMenu {
                 }
                 break;
             case 3:
+                System.out.print("Digite o id do cliente que você deseja apagar: ");
+                id = scan.nextInt();
+                scan.nextLine();
+                Costumer cover2 = (Costumer) costumerDao.select(id);
+                if(cover2 != null){
+                    if(shoppingCartDao.select(cover2.getId())!= null){
+                        System.out.println("Não é possível apagar o cliente porque ele está associado a um carrinho de compras");
+                    } else {
+                        costumerDao.delete(cover2.getId());
+                        System.out.println("Cliente apagado com sucesso");
+                    }
+                }
+                break;
+            case 4:
                 System.out.print("Digite o id do cliente que você deseja listar: ");
                 id = scan.nextInt();
                 Costumer cover1 = (Costumer) costumerDao.select(id);
@@ -79,7 +98,7 @@ public class CostumerMenu {
                 }
 
                 break;
-            case 4:
+            case 5:
                 for (Object obj : costumerDao.select()){
                     if(obj instanceof Costumer c){
                         System.out.println("Id = " + c.getId());
@@ -89,7 +108,7 @@ public class CostumerMenu {
                     System.out.println();
                 }
                 break;
-            case 5:
+            case 6:
             default:
                 System.out.println("Opção inválida, tente novamente");
                 break;

@@ -90,6 +90,23 @@ public class CartProductDao implements Dao {
         return cp;
     }
 
+    public Boolean selectProduct(Integer i) throws SQLException {
+        String query = "SELECT * FROM CARTPRODUCT WHERE product_id=" + i;
+        try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
+            ResultSet rs = conn.executeQuery();
+            boolean set = rs.next();
+            if(Boolean.TRUE.equals(set)){
+               return true;
+            } else {
+                return false;
+            }
+        }catch (SQLException e){
+            System.out.println("Não há nenhum produto nesse carinho");
+
+        }
+        return false;
+    }
+
     @Override
     public List<Object> select() throws SQLException {
         List<Object> listAll = new ArrayList<>();

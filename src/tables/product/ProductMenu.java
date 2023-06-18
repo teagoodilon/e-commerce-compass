@@ -1,14 +1,19 @@
 package tables.product;
 
+import tables.cart_product.CartProductDao;
+
 import java.sql.SQLException;
 import java.util.Scanner;
 
 public class ProductMenu {
     private Scanner scanner;
     private ProductDao productDao;
+
+    private CartProductDao cartProductDao;
     public ProductMenu() {
         scanner = new Scanner(System.in);
         productDao = new ProductDao();
+        cartProductDao = new CartProductDao();
     }
 
     public void stockProducts() throws SQLException {
@@ -29,9 +34,10 @@ public class ProductMenu {
         System.out.println("O que você deseja fazer com o Produto:");
         System.out.println("1. Criar");
         System.out.println("2. Editar");
-        System.out.println("3. Listar um produto");
-        System.out.println("4. Listar todos produtos disponíveis");
-        System.out.println("5. Voltar ao menu principal");
+        System.out.println("3. Apagar produto");
+        System.out.println("4. Listar um produto");
+        System.out.println("5. Listar todos produtos disponíveis");
+        System.out.println("6. Voltar ao menu principal");
     }
 
     public void executeProductMenu() throws SQLException {
@@ -43,7 +49,7 @@ public class ProductMenu {
             scanner.nextLine();
             executeProduct(option);
             System.out.println();
-        } while (option != 5);
+        } while (option != 6);
     }
 
     private void executeProduct(int option) throws SQLException {
@@ -87,6 +93,20 @@ public class ProductMenu {
                 }
                 break;
             case 3:
+                System.out.print("Digite o id do produto que você deseja apagar: ");
+                id = scan.nextInt();
+                scan.nextLine();
+                Product cover2 = (Product) productDao.select(id);
+                if(cover2 != null){
+                    if(Boolean.TRUE.equals(cartProductDao.selectProduct(cover2.getId()))){
+                        System.out.println("Não é possível apagar o produto porque ele está em um carrinho de compras");
+                    } else {
+                        productDao.delete(cover2.getId());
+                        System.out.println("Produto apagado com sucesso");
+                    }
+                }
+                break;
+            case 4:
                 System.out.print("Digite o id do produto que você deseja listar: ");
                 id = scan.nextInt();
                 Product cover1 = (Product) productDao.select(id);
@@ -97,7 +117,7 @@ public class ProductMenu {
                     System.out.println("Quantidade = " + cover1.getQuantity());
                 }
                 break;
-            case 4:
+            case 5:
                 System.out.println("Lista de produtos disponíveis: ");
                 for (Object obj : productDao.selectAvaible()) {
                     if (obj instanceof Product p) {
@@ -109,7 +129,7 @@ public class ProductMenu {
                     System.out.println();
                 }
                 break;
-            case 5:
+            case 6:
                 break;
             default:
                 System.out.println("Opção inválida, tente novamente");
