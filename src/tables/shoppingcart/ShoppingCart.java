@@ -33,6 +33,6 @@ public class ShoppingCart {
     }
 
     public void changeTotalValue(Float value) {
-        this.totalValue += value;
+        this.totalValue = this.totalValue + value;
     }
 }

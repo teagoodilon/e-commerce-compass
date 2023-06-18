@@ -9,7 +9,6 @@ public class CartProduct {
     private List<Product> productId;
     private List<Integer> qntProduct;
     private ShoppingCart shoppingCartId;
-
     private Float productsValue;
 
     public List<Product> getProductId() {

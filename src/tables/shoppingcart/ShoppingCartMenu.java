@@ -15,11 +15,11 @@ import java.util.Scanner;
 
 public class ShoppingCartMenu {
 
-    private Scanner scanner;
-    private CostumerDao costumerDao;
-    private CartProductDao cartProductDao;
-    private ProductDao productDao;
-    private ShoppingCartDao shoppingCartDao;
+    private final Scanner scanner;
+    private final CostumerDao costumerDao;
+    private final CartProductDao cartProductDao;
+    private final ProductDao productDao;
+    private final ShoppingCartDao shoppingCartDao;
 
     public ShoppingCartMenu() {
         scanner = new Scanner(System.in);
@@ -37,7 +37,7 @@ public class ShoppingCartMenu {
         System.out.println("2. Adicionar mais produtos");
         System.out.println("3. Editar");
         System.out.println("4. Listar um Carrinho de compras");
-        System.out.println("5. Listar todos Carrinho de compras");
+        System.out.println("5. Listar todos Carrinhos de compras");
         System.out.println("6. Voltar ao menu principal");
     }
 
@@ -64,10 +64,10 @@ public class ShoppingCartMenu {
             System.out.println();
         }
     }
-    public float sumAllValue() throws SQLException {
+    public float sumAllValue(int id) throws SQLException {
         float allValue = 0;
         for (Object obj : cartProductDao.select()) {
-            if (obj instanceof CartProduct cp) {
+            if (obj instanceof CartProduct cp && cp.getShoppingCartId().getId() == id){
                 allValue += cp.getProductsValue();
             }
         }
@@ -137,6 +137,58 @@ public class ShoppingCartMenu {
                 }
                 break;
             case 2:
+                System.out.print("Digite o id do cliente que você deseja adicionar produtos ao carrinho de compras: ");
+                id = scan.nextInt();
+                Costumer coverCostumer = (Costumer) costumerDao.select(id);
+                if(coverCostumer != null) {
+                    shoppingCart.setCostumerId(coverCostumer);
+                    if(shoppingCartDao.select(shoppingCart.getCostumerId().getId()) != null) {
+                        System.out.println("Cliente: " + coverCostumer.getName());
+                        stockProducts();
+                        do {
+                            System.out.print("Digite o id do produto que você quer adicionar: ");
+                            idProduct = scan.nextInt();
+                            scan.nextLine();
+                            cartProduct = new CartProduct();
+                            Product coverProduct = (Product) productDao.select(idProduct);
+                            if (coverProduct != null) {
+                                System.out.print("Digite quantas unidades desse produto você deseja adicionar: ");
+                                qntProduct = scan.nextInt();
+                                while ((coverProduct.getQuantity() - qntProduct) < 0) {
+                                    System.out.println("Não temos essa quantidade do produto em estoque, tente novamente.");
+                                    System.out.print("Digite quantas unidades desse produto você deseja adicionar: ");
+                                    qntProduct = scan.nextInt();
+                                }
+                                coverProduct.setQuantity(coverProduct.getQuantity() - qntProduct);
+                                productDao.update(coverProduct, coverProduct.getId());
+                                list.add(coverProduct);
+                                qntList.add(qntProduct);
+                                cartProduct.setShoppingCartId((ShoppingCart) shoppingCartDao.select(id));
+                                cartProduct.setProductId(list);
+                                cartProduct.setQntProduct(qntList);
+                                cartProduct.setProductsValue((float) (qntProduct*coverProduct.getPrice()));
+                                cartProductDao.insert(cartProduct);
+                                shoppingCart.setTotalValue(sumAllValue(cartProduct.getShoppingCartId().getId()));
+                                shoppingCartDao.update(shoppingCart, cartProduct.getShoppingCartId().getId());
+                                if(productDao.selectAvaible().isEmpty()){
+                                    System.out.println("Nosso estoque de produtos está vazio");
+                                    optionProduct = 2;
+                                } else {
+                                    System.out.println("Você deseja adicionar mais produtos? ");
+                                    System.out.println("1. Sim ");
+                                    System.out.println("2. Não ");
+                                    System.out.print("Escolha uma opção: ");
+                                    optionProduct = scanner.nextInt();
+                                    scanner.nextLine();
+                                }
+                            }
+                        } while (optionProduct != 2);
+                        list.clear();
+                        qntList.clear();
+                    } else {
+                        System.out.println("O carrinho desse cliente ainda não foi criado");
+                    }
+                }
                 break;
             case 3:
                 System.out.print("Digite o id do cliente que você deseja editar o carrinho: ");
@@ -193,7 +245,7 @@ public class ShoppingCartMenu {
                                             cartProduct.setQntProduct(qntList);
                                             cartProduct.setProductsValue((float) (qntProduct * coverProduct.getPrice()));
                                             cartProductDao.update(cartProduct, coverProduct.getId());
-                                            shoppingCart.setTotalValue(sumAllValue());
+                                            shoppingCart.setTotalValue(sumAllValue(cartProduct.getShoppingCartId().getId()));
                                             shoppingCartDao.update(shoppingCart, cartProduct.getShoppingCartId().getId());
                                             System.out.println("Produto editado com sucesso");
                                         } else {
@@ -209,7 +261,7 @@ public class ShoppingCartMenu {
                                             if (qntProduct == 0) {
                                                 System.out.println("Produto removido do carrinho");
                                                 cartProductDao.delete(coverProduct.getId());
-                                                shoppingCart.setTotalValue(sumAllValue());
+                                                shoppingCart.setTotalValue(sumAllValue(cartProduct.getShoppingCartId().getId()));
                                                 shoppingCartDao.update(shoppingCart, cartProduct.getShoppingCartId().getId());
                                             } else {
                                                 list.add(coverProduct);
@@ -218,7 +270,7 @@ public class ShoppingCartMenu {
                                                 cartProduct.setQntProduct(qntList);
                                                 cartProduct.setProductsValue((float) (qntProduct * coverProduct.getPrice()));
                                                 cartProductDao.update(cartProduct, coverProduct.getId());
-                                                shoppingCart.setTotalValue(sumAllValue());
+                                                shoppingCart.setTotalValue(sumAllValue(cartProduct.getShoppingCartId().getId()));
                                                 shoppingCartDao.update(shoppingCart, cartProduct.getShoppingCartId().getId());
                                                 System.out.println("Produto editado com sucesso");
                                             }
@@ -266,9 +318,29 @@ public class ShoppingCartMenu {
                 }
                 break;
             case 5:
-
+                System.out.println();
+                for (Object obj : shoppingCartDao.select()) {
+                    if(obj instanceof ShoppingCart sc){
+                        System.out.print("Carrinho do cliente: " + sc.getCostumerId().getName());
+                        System.out.println(" - Id: " + sc.getCostumerId().getId());
+                        System.out.println("Lista de produtos: ");
+                        cartProduct = (CartProduct) cartProductDao.select(sc.getId());
+                        for (Product p : cartProduct.getProductId()) {
+                            System.out.print("Id = " + p.getId() + " - ");
+                            System.out.print("Nome = " + p.getName() + " - ");
+                            System.out.println("Quantidade = " + cartProduct.getQntProduct().get(count));
+                            count++;
+                        }
+                        count = 0;
+                        System.out.print("Valor total do carrinho: R$");
+                        System.out.println(sc.getTotalValue());
+                        System.out.println();
+                    }
+                }
                 break;
             case 6:
+                break;
+            default:
                 break;
         }
     }

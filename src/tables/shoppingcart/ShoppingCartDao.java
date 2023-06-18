@@ -70,6 +70,23 @@ public class ShoppingCartDao implements Dao {
         }
         return sc;
     }
+    public Object selectSc(Integer i) throws SQLException {
+        ShoppingCart sc = null;
+        String query = "SELECT * FROM SHOPPINGCART WHERE id=" + i;
+        try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
+            ResultSet rs = conn.executeQuery();
+            while(rs.next()){
+                sc = new ShoppingCart();
+                sc.setId(rs.getInt("id"));
+                sc.setCostumerId((Costumer) cd.select(rs.getInt("costumer_id")));
+                sc.setTotalValue(rs.getFloat("totalvalue"));
+            }
+        } catch (SQLException e){
+            System.out.println("Não existe carrinho associado a esse cliente");
+            return null;
+        }
+        return sc;
+    }
 
     @Override
     public List<Object> select() throws SQLException {

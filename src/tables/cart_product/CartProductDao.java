@@ -99,16 +99,19 @@ public class CartProductDao implements Dao {
         try(Statement conn = DbConnection.getConexao().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
             ResultSet rs = conn.executeQuery(query);
             while(rs.next()){
+                float value = 0.0F;
                 cp = new CartProduct();
                 List<Product> list = new ArrayList<>();
-                cp.setShoppingCartId((ShoppingCart) sc.select(rs.getInt("shoppingcart_id")));
-                cp.setProductsValue(rs.getFloat("productsValue"));
+                cp.setShoppingCartId((ShoppingCart) sc.selectSc(rs.getInt("shoppingcart_id")));
                 qntList.add(rs.getInt("qntProduct"));
                 list.add((Product) pd.select(rs.getInt("product_id")));
+                value += rs.getFloat("productsValue");
                 while (rs.next() && rs.getInt("shoppingcart_id") == cp.getShoppingCartId().getId()){
+                    value += rs.getFloat("productsValue");
                     list.add((Product) pd.select(rs.getInt("product_id")));
                     qntList.add(rs.getInt("qntProduct"));
                 }
+                cp.setProductsValue(value);
                 cp.setQntProduct(qntList);
                 cp.setProductId(list);
                 listAll.add(cp);
