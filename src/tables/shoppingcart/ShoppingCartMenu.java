@@ -27,7 +27,6 @@ public class ShoppingCartMenu {
         cartProductDao = new CartProductDao();
         productDao = new ProductDao();
         shoppingCartDao = new ShoppingCartDao();
-
     }
 
     public void showShoppingCartMenu() {
@@ -341,6 +340,7 @@ public class ShoppingCartMenu {
             case 6:
                 break;
             default:
+                System.out.println("Opção inválida, tente novamente");
                 break;
         }
     }

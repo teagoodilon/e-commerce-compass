@@ -29,10 +29,9 @@ public class OrderDao implements Dao {
     @Override
     public Boolean update(Object obj, Integer i) throws SQLException {
         Order o = (Order ) obj;
-        String query = "UPDATE ORDERS SET shoppingcart_id=?, confirmed=? where id=" + i;
+        String query = "UPDATE ORDERS SET confirmed=? where shoppingcart_id=" + i;
         try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
-            conn.setInt(1, o.getShoppingCartId().getId());
-            conn.setBoolean(2, o.isConfirmed());
+            conn.setBoolean(1, o.isConfirmed());
             conn.execute();
         }catch (SQLException e){
             throw new SQLException(e.getMessage());
@@ -53,12 +52,14 @@ public class OrderDao implements Dao {
 
     @Override
     public Object select(Integer i) throws SQLException {
-        Order o = new Order();
-        String query = "SELECT * FROM ORDERS WHERE id=" + i;
+        Order o = null;
+        String query = "SELECT * FROM ORDERS WHERE shoppingcart_id=" + i;
         try(PreparedStatement conn = DbConnection.getConexao().prepareStatement(query)){
             ResultSet rs = conn.executeQuery();
             while(rs.next()){
+                o = new Order();
                 o.setShoppingCartId((ShoppingCart) sc.select(rs.getInt("shoppingcart_id")));
+                o.setConfirmed(rs.getBoolean("confirmed"));
             }
         }catch (SQLException e){
             throw new SQLException(e.getMessage());
