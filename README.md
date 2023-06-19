@@ -26,3 +26,12 @@ git clone https://github.com/teagoodilon/e-commerce-compass.git
 10. Back to the clone files.
 11. Access the package: `e-commerce-compass/src/main/Main.java`
 12. And run the project on Intellij IDE! ✅
+
+## Difficulties found
+One of the difficulties was correctly configuring Maven with the JDBC driver, and after that, as I reached the "middle" of the project, I realized that I should have taken the time to structure it more thoroughly right from the beginning. I didn't create the relational diagram of the tables at the start, but rather in the middle of the project because I felt the lack of this standardization.
+
+## Express my thanks
+I am extremely grateful to Compass.UOL for the great learning experience in this first challenge and all support I received. I look forward to the next ones! 😆
+
+## Author
+Developed by [**Thiago Odilon**](https://www.linkedin.com/in/thiago-odilon-07391b209/)
