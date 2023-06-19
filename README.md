@@ -22,6 +22,7 @@ git clone https://github.com/teagoodilon/e-commerce-compass.git
 6. Check the **Checkbox**. (🤣)
 7. And press **Next** two times.
 8. Click **Finish** and **Ok**.
-9. Back to the clone files.
-10. Access the package: `e-commerce-compass/src/main/Main.java`
-11. And run the project on Intellij IDE! ✅
+9. Connect to the server on top left side.
+10. Back to the clone files.
+11. Access the package: `e-commerce-compass/src/main/Main.java`
+12. And run the project on Intellij IDE! ✅
